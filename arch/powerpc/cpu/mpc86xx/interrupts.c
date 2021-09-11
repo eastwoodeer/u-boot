@@ -24,6 +24,8 @@
 
 void interrupt_init_cpu(unsigned *decrementer_count)
 {
+	return;
+
 	volatile immap_t *immr = (immap_t *)CONFIG_SYS_IMMR;
 	volatile ccsr_pic_t *pic = &immr->im_pic;
 

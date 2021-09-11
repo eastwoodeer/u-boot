@@ -185,6 +185,9 @@ void print_reginfo(void)
  * CONFIG_MAX_MEM_MAPPED u-boot will crash.
  *
  */
+
+#undef CONFIG_MAX_MEM_MAPPED
+#define CONFIG_MAX_MEM_MAPPED ((phys_size_t)2<<31 - 1)
 void setup_ddr_bat(phys_addr_t dram_size)
 {
 	unsigned long batu, bl;
@@ -196,7 +199,13 @@ void setup_ddr_bat(phys_addr_t dram_size)
 		print_size(sz, " left unmapped\n");
 	}
 
-	batu = bl | BATU_VS | BATU_VP;
+	bl = 0x7ff << 2;
+	unsigned long xbl = 0xf << 13;
+
+	batu = xbl | bl | BATU_VS | BATU_VP;
 	write_bat(DBAT0, batu, CONFIG_SYS_DBAT0L);
 	write_bat(IBAT0, batu, CONFIG_SYS_IBAT0L);
+
+	debug("dbat0l: %08x, dbat0u, %08x, ibat0l: %08x, ibat0u: %08x\n",
+		  mfspr(DBAT0L), mfspr(DBAT0U), mfspr(IBAT0L), mfspr(IBAT0U));
 }
