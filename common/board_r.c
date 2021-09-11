@@ -629,11 +629,16 @@ static int initr_bedbug(void)
 }
 #endif
 
+#define ISOS_KERNEL_START_ADDR (0x3000000)
+typedef ulong (*entry_t)(int, char * const []);
+
 static int run_main_loop(void)
 {
 #ifdef CONFIG_SANDBOX
 	sandbox_main_loop_init();
 #endif
+	do_go_exec((entry_t)ISOS_KERNEL_START_ADDR, 1, 0);
+
 	/* main_loop() can return to retry autoboot, if so just run it again */
 	for (;;)
 		main_loop();

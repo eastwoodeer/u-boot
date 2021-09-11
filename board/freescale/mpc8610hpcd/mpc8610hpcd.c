@@ -116,7 +116,7 @@ int checkboard(void)
 	return 0;
 }
 
-
+#undef CONFIG_SPD_EEPROM
 int dram_init(void)
 {
 	phys_size_t dram_size = 0;
@@ -124,7 +124,8 @@ int dram_init(void)
 #if defined(CONFIG_SPD_EEPROM)
 	dram_size = fsl_ddr_sdram();
 #else
-	dram_size = fixed_sdram();
+	/* dram_size = fixed_sdram(); */
+	dram_size = 4294967295;
 #endif
 
 	setup_ddr_bat(dram_size);
